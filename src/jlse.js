@@ -50,13 +50,25 @@ const argv = require("yargs")
     default: false,
     describe: "remove avs files"
   })
+  .option("fmt", {
+    alias: "F",
+    type: "string",
+    default: "mkv",
+    describe: "extension of output file"
+  })
+  .option("hw", {
+    alias: "h",
+    type: "boolean",
+    default: false,
+    describe: "enable qsv"
+  })
   .demandOption(
     ["input"],
     "Please provide input arguments to work with this tool"
   )
   .check(function(argv) {
     const ext = path.extname(argv.input);
-    if (ext !== ".ts") {
+    if (ext !== ".ts" && ext !== ".m2ts") {
       console.error(`invalid file extension ${ext}.`);
       return false;
     }
@@ -126,7 +138,7 @@ const main = async () => {
   if(argv.filter) {createFilter(inputFile, OUTPUT_AVS_CUT, OUTPUT_FILTER_CUT); }
 
   if(argv.encode) {
-    encode(argv.outdir? argv.outdir : inputFileDir, argv.outname? argv.outname : inputFileName, argv.target, argv.option);
+    encode(argv.outdir? argv.outdir : inputFileDir, argv.outname? argv.outname : inputFileName, argv.target, argv.option, argv.hw, argv.fmt);
   }
   if(argv.remove) {
     fs.removeSync(SAVE_DIR);

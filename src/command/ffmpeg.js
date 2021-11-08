@@ -8,8 +8,8 @@ const {
   OUTPUT_AVS_IN_CUT_LOGO,
 } = require("../settings");
 
-exports.exec = (save_dir, save_name, target, ffoption) => {
-  const args = ["-y", "-i"];
+exports.exec = (save_dir, save_name, target, ffoption, hw, format) => {
+  const args = ["-hwaccel", "qsv", "-c:v", "mpeg2_qsv", "-hwaccel_output_format", "qsv", "-fix_sub_duration", "-y", "-i"];
 
   if (target == "cutcm") {
     args.push(OUTPUT_AVS_IN_CUT);
@@ -24,7 +24,8 @@ exports.exec = (save_dir, save_name, target, ffoption) => {
       } 
     }
   }
-  args.push(path.join(save_dir,`${save_name}.mp4`));
+  args.push("-o");
+  args.push(path.join(save_dir,`${save_name}.${format}`));
   //console.log(args);
   try {
     spawnSync(FFMPEG_COMMAND, args, { stdio: "inherit" });
